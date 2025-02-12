@@ -10,22 +10,24 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-from pathlib import Path
-import os
+
 from pathlib import Path
 from dotenv import load_dotenv
 import os
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
 dotenv_path = os.path.join(BASE_DIR, 'utility', '.env')
 load_dotenv(dotenv_path)
 
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'hn=o6eq$7q2+grovpa-g3yn%1nd7ae7_*ul41r=$gvl89%fm%w')
 WEBSITE_HOSTNAME = os.getenv('WEBSITE_HOSTNAME', None)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -154,9 +156,9 @@ USE_TZ = True
 # MEDIA_ROOT = BASE_DIR / 'media'
 # MEDIA_URL = 'media/'
 
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'static'),
-# ]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 
 # STATIC_URL = 'static/'
@@ -164,7 +166,7 @@ USE_TZ = True
 # MEDIA_URL = '/media/'
 
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AZURE_SA_NAME = os.getenv('AZURE_SA_NAME')

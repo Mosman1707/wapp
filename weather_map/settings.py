@@ -12,7 +12,18 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+from pathlib import Path
+from dotenv import load_dotenv
+import os
 
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+dotenv_path = os.path.join(BASE_DIR, 'utility', '.env')
+load_dotenv(dotenv_path)
+
+
+SECRET_KEY = os.getenv('SECRET_KEY', 'hn=o6eq$7q2+grovpa-g3yn%1nd7ae7_*ul41r=$gvl89%fm%w')
+WEBSITE_HOSTNAME = os.getenv('WEBSITE_HOSTNAME', None)
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,12 +32,26 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-d@xahn7x_e9+3b3k$ov(jeakhh5e0=^=v1&p^fkoyi-%&hp9ve'
+# SECRET_KEY = 'django-insecure-d@xahn7x_e9+3b3k$ov(jeakhh5e0=^=v1&p^fkoyi-%&hp9ve'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = None
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
+
+if DEBUG: 
+
+    ALLOWED_HOSTS = [] 
+
+else: 
+
+    ALLOWED_HOSTS = [WEBSITE_HOSTNAME] 
+
+    CSRF_TRUSTED_ORIGINS = [f'https://{WEBSITE_HOSTNAME}'] 
+
+
+
+CORS_ALLOWED_ORIGINS = [f'https://{WEBSITE_HOSTNAME}']
 
 
 # Application definition
@@ -39,9 +64,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'weather',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -118,15 +145,50 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/'
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
+# # Default primary key field type
+# # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
-STATIC_URL ="static/"
-MEDIA_ROOT = BASE_DIR / 'media'
-MEDIA_URL = 'media/'
+# STATIC_URL ="static/"
+# MEDIA_ROOT = BASE_DIR / 'media'
+# MEDIA_URL = 'media/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static'),
+# ]
+
+
+# STATIC_URL = 'static/'
+# MEDIA_ROOT = BASE_DIR / 'media'
+# MEDIA_URL = '/media/'
+
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+AZURE_SA_NAME = os.getenv('AZURE_SA_NAME')
+AZURE_SA_KEY = os.getenv('AZURE_SA_KEY')
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.azure_storage.AzureStorage",
+        "OPTIONS": {
+            "account_name": AZURE_SA_NAME,
+            "account_key": AZURE_SA_KEY,
+            "azure_container": "media",
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "storages.backends.azure_storage.AzureStorage",
+        "OPTIONS": {
+            "account_name": AZURE_SA_NAME,
+            "account_key": AZURE_SA_KEY,
+            "azure_container": "static",
+        },
+    },
+}
+
+STATIC_URL = f'https://{AZURE_SA_NAME}.blob.core.windows.net/static/'
+
+MEDIA_URL = f'https://{AZURE_SA_NAME}.blob.core.windows.net/media/'

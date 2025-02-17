@@ -23,7 +23,7 @@ class Command(BaseCommand):
         
         connection_string = SA_CON
         blob_service_client = BlobServiceClient.from_connection_string(connection_string)
-        container_client = blob_service_client.get_container_client('<your azure media folder name>')
+        container_client = blob_service_client.get_container_client('media')
     
         for root, dirs, files in os.walk(local_media_directory):
             for file_name in files:

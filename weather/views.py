@@ -17,7 +17,7 @@ def weather_view(request):
   if request.method == 'GET' and 'lat' in request.GET and 'lon' in request.GET:
     lat = request.GET['lat']
     lon = request.GET['lon']
-    api_key = '99e919c8ea6c803c827735dc93f81ca6'  # Replace with your OpenWeatherMap API key
+    api_key = 'f7f3f2e32abba3f70591cedbe4ac861c'  # Replace with your OpenWeatherMap API key
     units = 'metric'
     lang = 'fr'
     url = f'https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units={units}&lang={lang}'
